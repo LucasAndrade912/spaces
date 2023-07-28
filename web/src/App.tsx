@@ -1,6 +1,7 @@
 import { GoogleLogo } from '@phosphor-icons/react';
 
 import spacesLogo from './assets/spacesLogoSmall.svg';
+import { Button } from './components/Button';
 
 export function App() {
 	return (
@@ -15,10 +16,13 @@ export function App() {
 						<strong className="text-purple-900 font-bold">space</strong>.
 					</span>
 
-					<button className="font-play font-bold text-xl flex justify-center items-center bg-purple-900 py-[14px] rounded shadow-blur gap-[14px] w-full hover:bg-purple-800 transition-colors">
-						<GoogleLogo weight="bold" size={28} />
-						Logar com Google
-					</button>
+					<Button.Root>
+						<Button.Icon>
+							<GoogleLogo weight="bold" size={28} />
+						</Button.Icon>
+
+						<Button.Title>Logar com Google</Button.Title>
+					</Button.Root>
 				</div>
 			</div>
 		</>
