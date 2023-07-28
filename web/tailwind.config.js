@@ -11,7 +11,14 @@ export default {
 				},
 				purple: {
 					900: '#6C5DC6',
+					800: '#796ad1'
 				},
+			},
+			fontFamily: {
+				play: ['Play', 'sans-serif'],
+			},
+			boxShadow: {
+				blur: '0px 3px 6px 0px rgba(255, 255, 255, 0.10)'
 			}
 		},
 	},
