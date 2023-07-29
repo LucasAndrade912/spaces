@@ -1,9 +1,9 @@
 import { GoogleLogo } from '@phosphor-icons/react';
 
-import spacesLogo from './assets/spacesLogoSmall.svg';
-import { Button } from './components/Button';
+import spacesLogo from '../assets/spacesLogoSmall.svg';
+import { Button } from '../components/Button';
 
-export function App() {
+export function Login() {
 	return (
 		<>
 			<img src={spacesLogo} alt="Spaces Logo" className="absolute top-[72px] left-[72px]" />
