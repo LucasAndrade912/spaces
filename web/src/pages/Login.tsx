@@ -2,6 +2,7 @@ import { GoogleLogo } from '@phosphor-icons/react';
 
 import spacesLogo from '../assets/spacesLogoSmall.svg';
 import { Button } from '../components/Button';
+import { getGoogleOAuthUrl } from '../utils/getGoogleOAuthUrl';
 
 export function Login() {
 	return (
@@ -16,12 +17,14 @@ export function Login() {
 						<strong className="text-purple-900 font-bold">space</strong>.
 					</span>
 
-					<Button.Root>
-						<Button.Icon>
-							<GoogleLogo weight="bold" size={28} />
-						</Button.Icon>
+					<Button.Root asChild>
+						<a href={getGoogleOAuthUrl('/home')}>
+							<Button.Icon>
+								<GoogleLogo weight="bold" size={28} />
+							</Button.Icon>
 
-						<Button.Title>Logar com Google</Button.Title>
+							<Button.Title>Logar com Google</Button.Title>
+						</a>
 					</Button.Root>
 				</div>
 			</div>
