@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String  @id @default(uuid())
+  name           String
+  email          String  @unique
+  profilePicture String?
+
+  spaces              Space[]
+  sharedUsersOnSpaces SharedUsersOnSpaces[]
+
+  @@map("users")
+}
+
+model Space {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ownerId   String
+
+  owner               User?                 @relation(fields: [ownerId], references: [id])
+  sharedUsersOnSpaces SharedUsersOnSpaces[]
+  files               File[]
+
+  @@map("spaces")
+}
+
+model SharedUsersOnSpaces {
+  userId   String
+  spaceId  String
+  isEditor Boolean @default(false)
+
+  user  User  @relation(fields: [userId], references: [id])
+  space Space @relation(fields: [spaceId], references: [id])
+
+  @@id([userId, spaceId])
+  @@map("sharedUsersOnSpaces")
+}
+
+model File {
+  id        Int       @id @default(autoincrement())
+  name      String
+  size      Int
+  type      FileTypes
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  spaceId   String
+
+  space Space? @relation(fields: [spaceId], references: [id])
+
+  @@unique([spaceId, name])
+  @@map("files")
+}
+
+enum FileTypes {
+  video
+  image
+  document
+  other
+}
