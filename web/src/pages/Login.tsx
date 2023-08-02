@@ -1,10 +1,18 @@
+import { Navigate } from 'react-router-dom';
 import { GoogleLogo } from '@phosphor-icons/react';
 
 import spacesLogo from '../assets/spacesLogoSmall.svg';
 import { Button } from '../components/Button';
+import { useAuth } from '../hook/useAuth';
 import { getGoogleOAuthUrl } from '../utils/getGoogleOAuthUrl';
 
 export function Login() {
+	const { isAuthenticated } = useAuth();
+
+	if (isAuthenticated) {
+		return <Navigate to="/" />;
+	}
+
 	return (
 		<>
 			<img src={spacesLogo} alt="Spaces Logo" className="absolute top-[72px] left-[72px]" />
@@ -18,7 +26,7 @@ export function Login() {
 					</span>
 
 					<Button.Root asChild>
-						<a href={getGoogleOAuthUrl('/home')}>
+						<a href={getGoogleOAuthUrl('/')}>
 							<Button.Icon>
 								<GoogleLogo weight="bold" size={28} />
 							</Button.Icon>
