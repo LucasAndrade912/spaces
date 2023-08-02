@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
@@ -17,15 +17,38 @@ app.use(cors({
 }));
 app.use(express.json());
 
+async function authMiddleware(req: Request, res: Response, next: NextFunction) {
+	const { token } = req.cookies;
+
+	if (!token) {
+		return res.status(401).send();
+	}
+
+	try {
+		const { sub } = jwt.verify(token, process.env.JWT_SECRET as string);
+
+		res.locals.user = sub as string;
+
+		next();
+	} catch {
+		return res.status(401).send();
+	}
+}
+
+app.get('/me', authMiddleware, async (req, res) => {
+	const user = await prisma.user.findUnique({
+		where: { id: String(res.locals.user) }
+	});
+
+	return res.json({ user });
+});
+
 app.get('/oauth', async (req, res) => {
 	const rootUrl = 'https://oauth2.googleapis.com/token';
 	const { code, state: path } = req.query;
 
 	if (!code) {
-		return res.status(401).json({
-			status: 'fail',
-			message: 'Authorization code not provided'
-		});
+		return res.status(401).send();
 	}
 
 	const options = {
