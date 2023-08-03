@@ -13,6 +13,11 @@ export default {
 					900: '#6C5DC6',
 					800: '#796ad1'
 				},
+				custom: {
+					red: '#F34343',
+					rose: '#D64FB8',
+					orange: '#F58B28'
+				}
 			},
 			fontFamily: {
 				play: ['Play', 'sans-serif'],
