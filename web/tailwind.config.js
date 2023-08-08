@@ -24,6 +24,9 @@ export default {
 			},
 			boxShadow: {
 				blur: '0px 3px 6px 0px rgba(255, 255, 255, 0.10)'
+			},
+			gridTemplateColumns: {
+				table: '50% 20% 25% 5%'
 			}
 		},
 	},
