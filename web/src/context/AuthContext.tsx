@@ -26,7 +26,10 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 		try {
 			const { data } = await api.get('/me');
 
-			setUser(data.user);
+			setUser({
+				email: data.user.email,
+				profilePicture: data.user.avatar,
+			});
 			setIsAuthenticated(true);
 		} catch (error) {
 			setUser(null);
