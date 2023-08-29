@@ -23,7 +23,8 @@ export default {
 				play: ['Play', 'sans-serif'],
 			},
 			boxShadow: {
-				blur: '0px 3px 6px 0px rgba(255, 255, 255, 0.10)'
+				blur: '0px 3px 6px 0px rgba(255, 255, 255, 0.10)',
+				modal: '0px 1px 20px 15px rgba(255, 255, 255, 0.01)'
 			},
 			gridTemplateColumns: {
 				table: '50% 20% 25% 5%'
