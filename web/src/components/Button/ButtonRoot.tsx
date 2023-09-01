@@ -1,18 +1,19 @@
-import { ButtonHTMLAttributes } from 'react';
+import { forwardRef, ComponentProps } from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { twMerge } from 'tailwind-merge';
 
-interface ButtonRootProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-	children: React.ReactNode;
+interface ButtonRootProps extends ComponentProps<'button'> {
 	asChild?: boolean;
 }
 
-export function ButtonRoot({ className, asChild, ...props }: ButtonRootProps) {
-	const Component = asChild ? Slot : 'button';
+export const ButtonRoot = forwardRef<HTMLButtonElement, ButtonRootProps>(
+	({ className, asChild, ...props }: ButtonRootProps, ref) => {
+		const Component = asChild ? Slot : 'button';
 
-	const defaultStyles =
-		'flex justify-center items-center bg-purple-900 py-[14px] rounded shadow-blur gap-[14px] hover:bg-purple-800 transition-colors';
-	const styles = twMerge(defaultStyles, className);
+		const defaultStyles =
+			'flex justify-center items-center bg-purple-900 py-[14px] rounded shadow-blur gap-[14px] hover:bg-purple-800 transition-colors';
+		const styles = twMerge(defaultStyles, className);
 
-	return <Component className={styles} {...props} />;
-}
+		return <Component className={styles} {...props} ref={ref} />;
+	}
+);
