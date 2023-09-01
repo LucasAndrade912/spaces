@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
 import { MonitorPlay, Files, Folder } from 'phosphor-react';
-import { Images, Plus } from '@phosphor-icons/react';
+import { Images } from '@phosphor-icons/react';
 
 import spacesLogo from '../assets/spacesLogo.svg';
 import { useAuth } from '../hook/useAuth';
 import { spacesMocks } from '../mocks/spacesMocks';
 
 import { Space } from '../components/Space';
-import { Button } from '../components/Button';
 import { Select } from '../components/Select';
 import { FileTypeQuantity } from '../components/FileTypeQuantity';
+import { CreateSpaceModal } from '../components/CreateSpaceModal';
 
 const fileTypeQuantitys = [
 	{
@@ -74,13 +74,7 @@ export function Home() {
 					<section className="flex gap-6">
 						<Select />
 
-						<Button.Root className="h-8 gap-2 px-3">
-							<Button.Icon>
-								<Plus size={16} color="#FFF" weight="bold" />
-							</Button.Icon>
-
-							<Button.Title className="text-sm">Criar Space</Button.Title>
-						</Button.Root>
+						<CreateSpaceModal />
 					</section>
 				</section>
 
