@@ -33,6 +33,23 @@ export class UserRepositorySql implements UserRepository {
 		};
 	}
 
+	async searchByEmail(email: string): Promise<{ email: string, avatar: string } | null> {
+		const user = await prisma.user.findFirst({
+			where: {
+				email: {
+					contains: email
+				}
+			}
+		});
+
+		if (!user) return null;
+
+		return {
+			email: user.email,
+			avatar: user.profilePicture || ''
+		};
+	}
+
 	async create(user: Omit<User, 'id'>): Promise<User | null> {
 		const newUser = await prisma.user.create({
 			data: {
