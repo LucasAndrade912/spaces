@@ -6,7 +6,7 @@ import { Modal } from './Modal';
 import { Button } from './Button';
 import { Input } from './Input';
 import { SharedUser } from './SharedUser';
-import { getUsers } from '../mocks/usersMock';
+import { api } from '../lib/api';
 
 type SharedUserData = {
 	email: string;
@@ -16,10 +16,18 @@ type SharedUserData = {
 
 type SuggestedUser = Omit<SharedUserData, 'permission'>;
 
+type RequestData = {
+	message: string;
+	user: {
+		email: string;
+		avatar: string;
+	};
+};
+
 export function CreateSpaceModal() {
 	const [spaceName, setSpaceName] = useState('');
 	const [participantEmail, setParticipantEmail] = useState('');
-	const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
+	const [suggestedUser, setSuggestedUser] = useState<SuggestedUser | null>(null);
 	const [sharedUsers, setSharedUsers] = useState<SharedUserData[]>([]);
 
 	async function handleCreateSpace() {
@@ -29,18 +37,22 @@ export function CreateSpaceModal() {
 	async function handleSearchUser(email: string) {
 		setParticipantEmail(email);
 
-		const validate = /([a-zA-Z0-9._-]+)@/;
+		const partialEmailValidator = /([a-zA-Z0-9._-]+)@$/;
 
-		if (validate.test(email)) {
-			const users = await getUsers();
-			setSuggestedUsers(users);
+		if (partialEmailValidator.test(email)) {
+			const { data } = await api.get<RequestData>(`/users/participant?email=${email}`);
+
+			setSuggestedUser({
+				email: data.user.email,
+				profilePicture: data.user.avatar,
+			});
 		}
 	}
 
 	function handleAddUser(email: string, profilePicture: string) {
 		setSharedUsers((prev) => [...prev, { email, profilePicture, permission: 'read' }]);
 		setParticipantEmail('');
-		setSuggestedUsers([]);
+		setSuggestedUser(null);
 	}
 
 	function handleRemoveUser(email: string) {
@@ -65,7 +77,7 @@ export function CreateSpaceModal() {
 
 	useEffect(() => {
 		if (participantEmail.length === 0) {
-			setSuggestedUsers([]);
+			setSuggestedUser(null);
 		}
 	}, [participantEmail]);
 
@@ -107,22 +119,19 @@ export function CreateSpaceModal() {
 						onChange={(event) => handleSearchUser(event.target.value)}
 					/>
 
-					{suggestedUsers.length > 0 && participantEmail.length > 0 && (
+					{suggestedUser && participantEmail.length > 0 && (
 						<div className="absolute top-[92px] flex flex-col w-full z-20">
-							{suggestedUsers.map((user) => (
-								<button
-									key={user.email}
-									onClick={() => handleAddUser(user.email, user.profilePicture)}
-									className="flex gap-2 items-center bg-black-700 py-2 pl-2 w-full transition-colors hover:bg-black-600 last:rounded-b">
-									<img
-										src={user.profilePicture}
-										alt="Foto de usuário"
-										className="w-5 h-5 rounded-full"
-									/>
+							<button
+								onClick={() => handleAddUser(suggestedUser.email, suggestedUser.profilePicture)}
+								className="flex gap-2 items-center bg-black-700 py-2 pl-2 w-full transition-colors hover:bg-black-600 last:rounded-b">
+								<img
+									src={suggestedUser.profilePicture}
+									alt="Foto de usuário"
+									className="w-5 h-5 rounded-full"
+								/>
 
-									<span className="text-xs">{user.email}</span>
-								</button>
-							))}
+								<span className="text-xs">{suggestedUser.email}</span>
+							</button>
 						</div>
 					)}
 				</Input.Root>
