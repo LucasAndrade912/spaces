@@ -1,7 +1,7 @@
-import { InputHTMLAttributes } from 'react';
+import { ComponentProps } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export function InputField(props: InputHTMLAttributes<HTMLInputElement>) {
+export function InputField(props: ComponentProps<'input'>) {
 	const { className, ...rest } = props;
 
 	const defaultStyles =
