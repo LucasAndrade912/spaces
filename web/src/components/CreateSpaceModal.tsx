@@ -25,13 +25,30 @@ type RequestData = {
 };
 
 export function CreateSpaceModal() {
+	const [isLoading, setIsLoading] = useState(false);
 	const [spaceName, setSpaceName] = useState('');
 	const [participantEmail, setParticipantEmail] = useState('');
 	const [suggestedUser, setSuggestedUser] = useState<SuggestedUser | null>(null);
 	const [sharedUsers, setSharedUsers] = useState<SharedUserData[]>([]);
 
 	async function handleCreateSpace() {
-		console.log(JSON.stringify({ spaceName, sharedUsers }, null, 2));
+		setIsLoading(true);
+
+		try {
+			await api.post('/spaces', {
+				name: spaceName,
+				participants: sharedUsers.map((user) => ({
+					email: user.email,
+					permission: user.permission,
+				})),
+			});
+
+			alert('Space criado com sucesso!');
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setIsLoading(false);
+		}
 	}
 
 	async function handleSearchUser(email: string) {
@@ -162,7 +179,10 @@ export function CreateSpaceModal() {
 					</Modal.Close>
 
 					<Modal.Close>
-						<Button.Root className="h-8 gap-2 px-3" onClick={handleCreateSpace}>
+						<Button.Root
+							disabled={isLoading}
+							className="h-8 gap-2 px-3"
+							onClick={handleCreateSpace}>
 							<Button.Title className="text-sm">Criar</Button.Title>
 						</Button.Root>
 					</Modal.Close>

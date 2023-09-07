@@ -11,7 +11,7 @@ export const ButtonRoot = forwardRef<HTMLButtonElement, ButtonRootProps>(
 		const Component = asChild ? Slot : 'button';
 
 		const defaultStyles =
-			'flex justify-center items-center bg-purple-900 py-[14px] rounded shadow-blur gap-[14px] hover:bg-purple-800 transition-colors';
+			'flex justify-center items-center bg-purple-900 py-[14px] rounded shadow-blur gap-[14px] hover:bg-purple-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
 		const styles = twMerge(defaultStyles, className);
 
 		return <Component className={styles} {...props} ref={ref} />;
