@@ -1,15 +1,17 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MonitorPlay, Files, Folder } from 'phosphor-react';
 import { Images } from '@phosphor-icons/react';
+import { MonitorPlay, Files, Folder } from 'phosphor-react';
 
-import spacesLogo from '../assets/spacesLogo.svg';
+import { api } from '../lib/api';
 import { useAuth } from '../hook/useAuth';
-import { spacesMocks } from '../mocks/spacesMocks';
+import spacesLogo from '../assets/spacesLogo.svg';
 
 import { Space } from '../components/Space';
 import { Select } from '../components/Select';
 import { FileTypeQuantity } from '../components/FileTypeQuantity';
 import { CreateSpaceModal } from '../components/CreateSpaceModal';
+import { EmptySpaces } from '../components/EmptySpaces';
 
 const fileTypeQuantitys = [
 	{
@@ -38,9 +40,40 @@ const fileTypeQuantitys = [
 	},
 ];
 
+type Space = {
+	id: string;
+	name: string;
+	updatedAt: string;
+};
+
 export function Home() {
+	const [isLoading, setIsLoading] = useState(true);
+	const [spaces, setSpaces] = useState<Space[]>([]);
+
 	const { user } = useAuth();
 	const profilePicture = user?.profilePicture;
+
+	async function getAllSpaces() {
+		try {
+			const { data } = await api.get<{ spaces: Space[] }>('/spaces');
+
+			setSpaces(
+				data.spaces.map((space) => ({
+					id: space.id,
+					name: space.name,
+					updatedAt: new Date(space.updatedAt).toLocaleString(),
+				}))
+			);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setIsLoading(false);
+		}
+	}
+
+	useEffect(() => {
+		getAllSpaces();
+	}, []);
 
 	return (
 		<>
@@ -74,7 +107,7 @@ export function Home() {
 					<section className="flex gap-6">
 						<Select />
 
-						<CreateSpaceModal />
+						<CreateSpaceModal onCreateSpace={getAllSpaces} />
 					</section>
 				</section>
 
@@ -91,15 +124,20 @@ export function Home() {
 						<div className="w-full h-px bg-black-700 my-6" />
 
 						<div className="flex flex-col gap-8">
-							{spacesMocks.map((space) => (
-								<Space
-									key={space.id}
-									id={space.id}
-									title={space.title}
-									size={space.size}
-									lastUpdate={space.lastUpdate}
-								/>
-							))}
+							{!isLoading &&
+								(spaces.length > 0 ? (
+									spaces.map((space) => (
+										<Space
+											key={space.id}
+											id={space.id}
+											title={space.name}
+											size={1000}
+											lastUpdate={space.updatedAt.toString()}
+										/>
+									))
+								) : (
+									<EmptySpaces />
+								))}
 						</div>
 					</div>
 				</section>

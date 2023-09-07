@@ -24,7 +24,11 @@ type RequestData = {
 	};
 };
 
-export function CreateSpaceModal() {
+interface CreateSpaceModalProps {
+	onCreateSpace: () => void;
+}
+
+export function CreateSpaceModal({ onCreateSpace }: CreateSpaceModalProps) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [spaceName, setSpaceName] = useState('');
 	const [participantEmail, setParticipantEmail] = useState('');
@@ -43,6 +47,7 @@ export function CreateSpaceModal() {
 				})),
 			});
 
+			onCreateSpace();
 			alert('Space criado com sucesso!');
 		} catch (error) {
 			console.log(error);
