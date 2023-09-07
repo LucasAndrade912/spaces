@@ -4,13 +4,16 @@ import { ExpressAdapter } from '@/http/express/server';
 import { AuthMiddleware } from '@/http/express/middlewares/authMiddleware';
 import { OAuthUserController } from '@/http/express/controllers/oauthUser';
 import { GetUserDataController } from '@/http/express/controllers/getUserData';
-import { CreateSpaceController } from './http/express/controllers/createSpace';
 import { SuggestParticipatEmailController } from './http/express/controllers/suggestParticipantEmail';
+
+import { loadSpaceRoutes } from './routes/spacesRoutes';
 
 const PORT = Number(process.env.PORT) || 3000;
 const server = new ExpressAdapter(PORT);
 
 const authMiddleware = new AuthMiddleware();
+
+loadSpaceRoutes(server, [authMiddleware]);
 
 server.createRoute({
 	route: '/oauth',
@@ -22,13 +25,6 @@ server.createRoute({
 	route: '/me',
 	method: 'GET',
 	controller: new GetUserDataController(),
-	middlewares: [authMiddleware]
-});
-
-server.createRoute({
-	route: '/spaces',
-	method: 'POST',
-	controller: new CreateSpaceController(),
 	middlewares: [authMiddleware]
 });
 

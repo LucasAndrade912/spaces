@@ -6,5 +6,7 @@ type Participant = {
 export interface Space {
 	name: string;
 	owner: string;
+	createdAt: Date;
+	updatedAt: Date;
 	participants: Participant[];
 }

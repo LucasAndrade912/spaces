@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { SpaceRepository } from '@/contracts/repositories/spaceRepository';
+import { SpaceRepository, FindAllSpaces } from '@/contracts/repositories/spaceRepository';
 
 interface InputCreateSpace {
 	name: string;
@@ -32,5 +32,26 @@ export class SpaceRepositorySql implements SpaceRepository {
 				}
 			}
 		});
+	}
+
+	async findAll(userId: string): Promise<FindAllSpaces> {
+		const spaces = await prisma.space.findMany({
+			where: {
+				ownerId: userId
+			},
+			select: {
+				id: true,
+				title: true,
+				updatedAt: true,
+				createdAt: false,
+				ownerId: false,
+			}
+		});
+
+		return spaces.map(space => ({
+			id: space.id,
+			name: space.title,
+			updatedAt: space.updatedAt,
+		}));
 	}
 }

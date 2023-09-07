@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { Controller } from '@/contracts/controller';
-import { CreateSpace } from '@/useCases/createSpace';
+import { CreateSpace } from '@/useCases/spaces/createSpace';
 import { UserRepositorySql } from '@/repositories/sql/userRepositorySql';
 import { SpaceRepositorySql } from '@/repositories/sql/spaceRepositorySql';
 
