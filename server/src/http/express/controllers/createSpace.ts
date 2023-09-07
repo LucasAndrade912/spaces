@@ -11,11 +11,11 @@ export class CreateSpaceController implements Controller<Request, Response> {
 		const spaceRepository = new SpaceRepositorySql();
 		const createSpaceUseCase = new CreateSpace(userRepository, spaceRepository);
 
-		const { name, participantsEmails } = request.body;
+		const { name, participants } = request.body;
 
 		await createSpaceUseCase.execute({
 			userId: String(response.locals.user),
-			space: { name, participantsEmails }
+			space: { name, participants }
 		});
 
 		response.status(201).send();
